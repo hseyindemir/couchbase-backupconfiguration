@@ -1,0 +1,9 @@
+---
+# defaults file for cb-backup
+cluster_name: test
+username: test
+password: test
+server_address: test
+period: 10
+mountpoint: /backups
+retentiondays: 1
