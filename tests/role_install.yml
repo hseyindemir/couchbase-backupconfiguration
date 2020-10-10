@@ -1,0 +1,4 @@
+- src: https://github.com/hseyindemir/couchbasebackup-configurator.git
+  scm: git
+  version: "v0.1"
+  name: couchbasebackup-configurator
