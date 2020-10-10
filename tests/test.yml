@@ -1,0 +1,15 @@
+---
+- hosts: backup_server
+  become: true
+  roles: 
+    - cb-backup
+  vars:
+    cluster_name: logical_cluster_name
+    username: couchbase_user
+    password: couchbase_password
+    server_address: 192.168.1.1
+    period: 30
+    mountpoint: /backupstorepoint
+
+
+      

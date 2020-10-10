@@ -1,0 +1,55 @@
+#!/bin/bash
+ARCHIVE=/cb-data/{{ cluster_name }}/backups/
+HOST={{ server_address }}
+USERNAME={{ username }}
+PASSWORD={{ password }}
+THREADS=4
+CBBACKUPMGR=/opt/couchbase/bin/cbbackupmgr
+BACKUPREGEX="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}_[0-9]{2}_[0-9]{2}.[0-9]{9}"
+# Find today in string format
+REPO=$(date +"%m_%d_%Y")
+ARCHIVE=/cb-data/{{ cluster_name }}/backups/$REPO/
+# Create repository for today
+$CBBACKUPMGR config -a /cb-data/{{ cluster_name }}/backups/$REPO -r $REPO
+# Running backup
+CMD="${CBBACKUPMGR} backup --archive ${ARCHIVE} --repo ${REPO} --host couchbase://${HOST} --username ${USERNAME} --password ${PASSWORD} --threads ${THREADS}"
+echo -e "Running backup...\nCommand: ${CMD}"
+$CMD
+# Compacting the backup
+#BACKUPLIST=$(${CBBACKUPMGR} list --archive ${ARCHIVE} --repo ${REPO} | awk '{print $NF}' | grep -E ${BACKUPREGEX})
+#LASTBACKUP=$(echo "${BACKUPLIST}" | sed '$!d')
+#echo $LASTBACKUP
+#CMD="${CBBACKUPMGR} compact --archive ${ARCHIVE} --repo ${REPO} --backup ${LASTBACKUP}"
+#echo -e "Compacting the backup...\nCommand: ${CMD}"
+#$CMD
+
+
+# Get folder names into an array
+folders=$(find /cb-data/{{ cluster_name }}/backups/* -maxdepth 1 -type d)
+for folder in $folders 
+  do
+  #echo $folder
+  # Find required folder names
+  repo1=$(date +"%m_%d_%Y")
+  repo2=$(date --date='{{ retentiondays }} day ago' +"%m_%d_%Y")
+  if [ $folder == /cb-data/{{ cluster_name }}/backups/$repo1 ] || [ $folder == /cb-data/{{ cluster_name }}backups/$repo2 ] || [ $folder == /cb-data/{{ cluster_name }}/backups/$repo1/$repo1 ] || [ $folder == /cb-data/{{ cluster_name }}/backups/$repo2/$repo2 ] || [ $folder == /cb-data/{{ cluster_name }}/backups/$repo1/$repo1 ] || [ $folder == /cb-data/{{ cluster_name }}/backups/$repo2/$repo2 ]|| [ $folder == /cb-data/{{ cluster_name }}/backups/$repo1/logs ] || [ $folder == /cb-data/{{ cluster_name }}/backups/$repo2/logs ]; then
+    echo "found required repository"
+  else
+    echo "found unrequired repository. This will be deleted"
+    echo $folder
+    echo $repo1
+    echo $repo2
+    rm -rf $folder/*
+    rm -rf $folder
+  fi
+  done
+
+
+# Variables
+
+    # Archive
+    # User
+    # Pass
+    # IP
+    # Threads
+    # Backup Binary Directory
