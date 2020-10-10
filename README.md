@@ -18,6 +18,13 @@ Role Dependencies
 
   - Couchbase Server >= 6.5.1
 
+
+Role Installation
+=========
+```
+ansible-galaxy install -r role_install.yml
+```
+
 Role Variables
 --------------
 
