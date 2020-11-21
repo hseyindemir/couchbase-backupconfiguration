@@ -1,7 +1,7 @@
 - name: Copy Backup Script to Backup Server
   template:
     src: backup_template.j2
-    dest: /cb-data/{{ cluster_name }}.sh
+    dest: "{{ mountpoint }}/{{ cluster_name }}.sh"
     owner: root
     group: root
     mode: '0777'
